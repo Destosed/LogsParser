@@ -2,31 +2,30 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace MinecraftDialogParser
 {
     class Program
     {
+        
         static void Main(string[] args)
         {
-            Dictionary<string, ConsoleColor> player = new Dictionary<string, ConsoleColor>()
-            {
-                ["[Server]"] = ConsoleColor.White,
-                ["<D3xteR1337>"] = ConsoleColor.Yellow,
-                ["<obasraska65>"] = ConsoleColor.Green,
-                ["<Huesos>"] = ConsoleColor.Blue,
-                ["<sixodo>"] = ConsoleColor.Cyan,
-                ["<Nihooyaz>"] = ConsoleColor.Magenta,
-                ["<DivaseLight>"] = ConsoleColor.Gray,
-                ["<INTHEEND27>"] = ConsoleColor.DarkGreen
-            };
             List<string> dialogLines = new List<string>();
-            string textFileToParse = "2019-01-23-6.log";
-            string[] fileLines = File.ReadAllLines(@"logs\" + textFileToParse, Encoding.Default);
+            string textFileToParse = "2019-01-21-4.log";
+            string[] fileLines = File.ReadAllLines(@"C:\Users\Нияз\Desktop\MC 12.2 - копия\logs\" + textFileToParse, Encoding.Default);
+            ChatEntry[] chatEntries = parseLog(fileLines);
 
-            GetDialogs(fileLines, player, dialogLines);
-            PrintToConsole(player, dialogLines);
-            PrintToFile(dialogLines);
+            if(chatEntries.Length > 0)
+            {
+                IPrintable printable = new ConsolePrinter();
+                printable.print(chatEntries);
+            }
+            else
+            {
+                Console.WriteLine("sosi");
+            }
+            
             Console.ReadKey();
         }
 
@@ -41,28 +40,20 @@ namespace MinecraftDialogParser
 
         }
 
-        public static void PrintToConsole(Dictionary<string, ConsoleColor> player, List<string> dialogLines) 
+        public static ChatEntry[] parseLog(string[] lines)
         {
-            foreach (var dialogLine in dialogLines)                 
+            Regex regex = new Regex(@"^.*?(\[Server\]|<[A-z0-9\s]+>)\s(.*)");
+            List<ChatEntry> list = new List<ChatEntry>();
+            foreach(string line in lines)
             {
-                foreach (var nickname in player.Keys)                 
-                    if (dialogLine.Contains(nickname))
-                    {
-                        Console.ForegroundColor = player[nickname];
-                        Console.WriteLine(dialogLine);
-                        Console.ForegroundColor = ConsoleColor.White;
-                    }
+                Match match = regex.Match(line);
+                if(match.Success)
+                {
+                    list.Add(new ChatEntry(match.Groups[1].Value, match.Groups[2].Value));
+                }
             }
-        }
 
-        public static void PrintToFile(List<string> dialogLines) 
-        {
-            if (dialogLines.Count != 0)
-                using (StreamWriter sw = new StreamWriter(@"logs\" + "MineCraftDialogs.txt"))
-                    foreach (var dialogLine in dialogLines)
-                        sw.WriteLine(dialogLine);
-            else
-                throw new Exception("EmptyDialog");
+            return list.ToArray();
         }
     }
 }
