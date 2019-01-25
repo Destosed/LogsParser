@@ -15,7 +15,7 @@ namespace MinecraftDialogParser
             ["<D3xteR1337>"] = ConsoleColor.Yellow,
             ["<obasraska65>"] = ConsoleColor.Green,
             ["<Huesos>"] = ConsoleColor.Blue,
-          //  ["<sixodo>"] = ConsoleColor.Cyan,
+            ["<sixodo>"] = ConsoleColor.Cyan,
             ["<Nihooyaz>"] = ConsoleColor.Magenta,
             ["<DivaseLight>"] = ConsoleColor.Gray,
             ["<INTHEEND27>"] = ConsoleColor.DarkGreen

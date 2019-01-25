@@ -8,12 +8,11 @@ namespace MinecraftDialogParser
 {
     class Program
     {
-        
         static void Main(string[] args)
         {
             List<string> dialogLines = new List<string>();
-            string textFileToParse = "2019-01-21-4.log";
-            string[] fileLines = File.ReadAllLines(@"C:\Users\Нияз\Desktop\MC 12.2 - копия\logs\" + textFileToParse, Encoding.Default);
+            string textFileToParse = "2019-01-23-5.log";
+            string[] fileLines = File.ReadAllLines(@"logs/" + textFileToParse, Encoding.Default);
             ChatEntry[] chatEntries = parseLog(fileLines);
 
             if(chatEntries.Length > 0)
@@ -23,7 +22,7 @@ namespace MinecraftDialogParser
             }
             else
             {
-                Console.WriteLine("sosi");
+                Console.WriteLine("Dialogs are empty");
             }
             
             Console.ReadKey();
@@ -48,9 +47,7 @@ namespace MinecraftDialogParser
             {
                 Match match = regex.Match(line);
                 if(match.Success)
-                {
                     list.Add(new ChatEntry(match.Groups[1].Value, match.Groups[2].Value));
-                }
             }
 
             return list.ToArray();
